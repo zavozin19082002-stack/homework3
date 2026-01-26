@@ -1,23 +1,32 @@
-from typing import List, Dict, Any
+from __future__ import annotations
+
+from typing import Literal, List, TypedDict, cast
 
 
-def filter_by_state(
-    data: List[Dict[str, Any]],
-    state: str = "EXECUTED"
-) -> List[Dict[str, Any]]:
+class Operation(TypedDict, total=False):
+    id: int
+    state: str
+    date: str
+
+
+SortOrder = Literal["asc", "desc"]
+
+
+def filter_by_state(data: List[Operation], state: str = "EXECUTED") -> List[Operation]:
     """
-    Фильтрует список словарей по значению ключа state.
-    По умолчанию возвращает операции со статусом EXECUTED.
+    Возвращает новый список операций, отфильтрованный по полю ``state``.
     """
     return [item for item in data if item.get("state") == state]
 
 
-def sort_by_date(
-    data: List[Dict[str, Any]],
-    reverse: bool = True
-) -> List[Dict[str, Any]]:
+def sort_by_date(data: List[Operation], order: SortOrder = "desc") -> List[Operation]:
     """
-    Сортирует список словарей по дате.
-    По умолчанию сортировка по убыванию (сначала новые).
+    Возвращает новый список операций, отсортированный по полю ``date``.
     """
-    return sorted(data, key=lambda x: x.get("date", ""), reverse=reverse)
+    reverse = order == "desc"
+
+    def get_date(item: Operation) -> str:
+        value = item.get("date", "")
+        return cast(str, value)
+
+    return sorted(data, key=get_date, reverse=reverse)
