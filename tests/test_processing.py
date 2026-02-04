@@ -3,7 +3,6 @@ import pytest
 from processing.processing import filter_by_state, sort_by_date
 
 
-
 def test_filter_by_state_default_executed(operations):
     result = filter_by_state(operations)
     assert len(result) == 2

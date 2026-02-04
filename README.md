@@ -28,3 +28,9 @@ data = [
 
 print(filter_by_state(data))
 print(filter_by_state(data, "CANCELED"))
+
+## Тестирование
+
+Запуск всех тестов:
+```bash
+poetry run pytest

@@ -18,10 +18,10 @@ def test_mask_account_card_ok(value, expected_piece):
 @pytest.mark.parametrize(
     "value",
     [
-        "",                 # пусто
-        "Счет",             # нет номера
-        "Maestro",          # нет номера
-        "что-то непонятное" # нет числа
+        "",  # пусто
+        "Счет",  # нет номера
+        "Maestro",  # нет номера
+        "что-то непонятное",  # нет числа
     ],
 )
 def test_mask_account_card_bad_input(value):
@@ -33,11 +33,7 @@ def test_get_date_ok():
     assert get_date("2018-10-14T08:21:33.419441") == "14.10.2018"
 
 
-import pytest
-
 @pytest.mark.parametrize("value", ["", "not-a-date"])
 def test_get_date_bad_input(value):
     with pytest.raises(ValueError):
         get_date(value)
-
-
