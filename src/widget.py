@@ -19,10 +19,22 @@ def mask_account_card(data: str) -> str:
 
     return f"{name} {masked_number}"
 
+
 def get_date(date_str: str) -> str:
     """
     Преобразует дату из формата ISO в формат ДД.ММ.ГГГГ.
+    Ожидаемый формат: YYYY-MM-DDTHH:MM:SS...
     """
-    date_part = date_str.split("T")[0]
-    year, month, day = date_part.split("-")
+    if not date_str or "T" not in date_str:
+        raise ValueError("Invalid date format")
+
+    date_part = date_str.split("T")[0]  # YYYY-MM-DD
+    parts = date_part.split("-")
+    if len(parts) != 3:
+        raise ValueError("Invalid date format")
+
+    year, month, day = parts
+    if len(year) != 4 or len(month) != 2 or len(day) != 2:
+        raise ValueError("Invalid date format")
+
     return f"{day}.{month}.{year}"
