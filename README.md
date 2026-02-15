@@ -1,8 +1,7 @@
 # Homework 2
 
 ## Цель проекта
-Проект предназначен для обработки списка банковских операций:
-фильтрации по статусу, сортировки по дате и генераторов для обработки транзакций.
+Проект предназначен для обработки списка банковских операций: фильтрации по статусу, сортировки по дате и использования генераторов для обработки транзакций.
 
 ## Установка
 1. Клонировать репозиторий:
@@ -30,8 +29,9 @@ print(filter_by_state(data))
 print(filter_by_state(data, "CANCELED"))
 ```
 
-### sort_by_state
+### sort_by_date
 Функция сортирует список операций по дате.
+
 Пример:
 ```python
 from src.processing.processing import sort_by_date
@@ -45,13 +45,15 @@ print(sort_by_date(data))               # по убыванию (по умолч
 print(sort_by_date(data, order="asc"))  # по возрастанию
 ```
 
-### Модуль generators
-Модуль generators содержит генераторы для обработки транзакций:
-filter_by_currency — фильтрует транзакции по коду валюты (например, "USD") и возвращает итератор.
-transaction_descriptions — по очереди возвращает описания операций.
-card_number_generator — генерирует номера карт в формате XXXX XXXX XXXX XXXX в заданном диапазоне.
+## Модуль generators
+Модуль `generators` содержит генераторы для обработки транзакций:
+- `filter_by_currency` — фильтрует транзакции по коду валюты (например, "USD") и возвращает итератор.
+- `transaction_descriptions` — по очереди возвращает описания операций (поле `description`).
+- `card_number_generator` — генерирует номера карт в формате `XXXX XXXX XXXX XXXX` в заданном диапазоне.
 
 ### filter_by_currency
+Функция возвращает итератор, который по очереди выдает транзакции, где валюта операции соответствует заданной.
+
 Пример:
 ```python
 from src.generators import filter_by_currency
@@ -84,25 +86,51 @@ transactions = [
 ]
 
 usd_transactions = filter_by_currency(transactions, "USD")
-for _ in range(1):
-    print(next(usd_transactions))
+print(next(usd_transactions))
 ```
 
 ### transaction_descriptions
-Пример: 
+Генератор возвращает описание каждой операции (значение поля `description`) по очереди.
+
+Пример:
 ```python
 from src.generators import transaction_descriptions
 
+transactions = [
+    {"description": "Перевод организации"},
+    {"description": "Перевод со счета на счет"},
+    {"description": "Перевод с карты на карту"},
+]
+
 descriptions = transaction_descriptions(transactions)
-for _ in range(2):
+for _ in range(3):
     print(next(descriptions))
 ```
 
 ### card_number_generator
+Генератор выдает номера банковских карт в формате `XXXX XXXX XXXX XXXX` в заданном диапазоне.
+
 Пример:
 ```python
 from src.generators import card_number_generator
 
 for card_number in card_number_generator(1, 5):
     print(card_number)
+```
+
+## Тестирование
+
+Запуск всех тестов:
+```bash
+poetry run pytest
+```
+
+Запуск тестов с проверкой покрытия:
+```bash
+poetry run pytest --cov=src --cov-report=term-missing
+```
+
+Проверка стиля кода (flake8):
+```bash
+poetry run flake8 src tests
 ```
